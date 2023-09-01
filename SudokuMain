@@ -1,0 +1,172 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+/**
+ *
+ * @author mtsguest
+ */
+public class Sudoku {
+
+    public String[][] makeSudoku(String s) {
+        int SIZE = 9;
+        int k = 0;
+        String[][] x = new String[SIZE][SIZE];
+        for (int i = 0; i < SIZE; i++) {
+            for (int j = 0; j < SIZE; j++) {
+                x[i][j] = s.substring(k, k + 1);
+                k++;
+            }
+        }
+        return x;
+    }
+
+    public String getPrintableSudoku(String[][] x) {
+        int SIZE = 9;
+        String temp = "";
+        for (int i = 0; i < SIZE; i++) {
+            if ((i == 3) || (i == 6)) {
+                temp = temp + "=================\n";
+            }
+            for (int j = 0; j < SIZE; j++) {
+                if ((j == 3) || (j == 6)) {
+                    temp = temp + " || ";
+                }
+                temp = temp + x[i][j];
+            }
+            temp = temp + "\n";
+        }
+        return temp;
+    }
+
+    public boolean isValidSudoku(String[][] x) {
+        return rowsAreLatin(x) && colsAreLatin(x) && goodSubsquares(x);
+    }
+
+    public boolean rowsAreLatin(String[][] x) {
+        boolean test = true;
+        for (int i = 0; i < x.length; i++) {
+            test = test && rowIsLatin(x,i);
+        }
+        return test;
+    }
+    
+    
+
+    
+//    OR...Try the more efficient algorithm below:
+//    
+//    public boolean rowsAreLatin(String[][] x)
+//    {
+//        boolean test = true;
+//        int i = 0;
+//        while (test == true && i < x.length)
+//        {
+//            test = test & rowIsLating(x,i);
+//        }
+//    }
+    
+    
+    /**
+     * @author 6226504
+     * Title: Sudoku Simulation
+     * Semester: COP3337 - Summer C 2023
+     * Lecturers Name: Cristy Charters
+     * Description: The code that I contributed to this program
+     * @param x
+     * @param i
+     * @return 
+     */
+
+  //rowIsLatin sets the flagArray into the required preconditions of a new boolean
+    // a true value for the first value in the array and then resets the 
+    // flagArray by setting all values except for the first to false
+    //Then we loop through the columns and transfer the array into integers
+    // this is where we then set the value found at each set into value and 
+    //change that space to true
+    // then we check the truth value by anding it with our variable seeing && 
+    //effectively checking if rowIsLatin is true or not
+    public boolean rowIsLatin(String[][] x, int i) {
+    boolean[] flagArray = new boolean[10];
+    flagArray[0] = true;
+    resetFlagArray(flagArray);
+int value;
+    for(int j = 0; j < x.length; j++) {
+       value = Integer.parseInt(x[i][j]);
+        flagArray[value] = true;
+    }
+    boolean truthChecker = true;
+    for (int j = 0; j < flagArray.length; j++) {
+        truthChecker = truthChecker && flagArray[j];
+    }
+
+    return truthChecker;
+}
+
+    //resetFlagArray is a method that helps reset the truth values of the entire
+    //array to be reused for all the rules of sudoku 
+    public void resetFlagArray(boolean[] flagArray){
+    for(int reset = 1; reset < flagArray.length; reset++){
+        flagArray[reset]= false;
+    } 
+}
+// uses colsAreLatin to check if the entirety of all the columns are true,
+    // this method uses the truth value of colIsLatin to check through each 
+    //column to see if it satisfies the rules for sudoku 
+    public boolean colsAreLatin(String[][] x) {
+    boolean test = true;
+        for (int i = 0; i < x.length; i++) {
+            test = test && colIsLatin(x,i);
+        }
+        return test;
+    }
+//after reseting the flagArray, colIsLatin has for loops to check through each 
+    // column and finds each unique number setting the flagArray to true
+    // then it checks
+public boolean colIsLatin(String[][] x, int j) {
+    boolean [] flagArray = new boolean[10];
+       flagArray[0] = true;
+       resetFlagArray(flagArray);
+int value; 
+    for (int i = 0; i < x.length; i++) { 
+     value = Integer.parseInt(x[i][j]);
+        flagArray[value] = true;
+    }
+    boolean truthChecker = true;
+    for (int i = 0; i < flagArray.length; i++) { // Step 3
+        truthChecker = truthChecker && flagArray[i];
+    }
+    return truthChecker;
+}
+
+    public boolean goodSubsquares(String[][] x) {
+        boolean test = true;
+        for(int i = 0; i< x.length; i += 3){
+            for(int j = 0; j< x[i].length; j +=3){
+                test = test && goodSubsquare(x,i,j);
+            }
+        }
+        return test;
+    }
+    public boolean goodSubsquare(String[][] x, int i, int j) {
+    boolean [] flagArray = new boolean[10];
+    flagArray[0] = true;
+    resetFlagArray(flagArray);
+ int value;
+    for(int rowNumber = i; rowNumber < i + 3; rowNumber++){
+        for(int colNumber = j; colNumber < j + 3; colNumber++){
+             value = Integer.parseInt(x[rowNumber][colNumber]);
+            flagArray[value] = true;
+        }
+    }
+    boolean absolute = true;
+    for(int k = 1; k < flagArray.length; k++) {
+        absolute = absolute && flagArray[k];
+    }
+    return absolute;
+}
+
+
+}
